@@ -2,7 +2,7 @@
 project:
   title:        "Simple Math ALU"      # Your project title
   description:  "8bit calculation unit" # Short summary of your chip
-  author:       "Your Name"             # Your name or alias
+  author:       "M Peerbhai"             # Your name or alias
   language:     "Verilog"               # The language used
   clock_hz:     10000000                # Target clock speed
 
