@@ -1,5 +1,5 @@
 {
-  "DESIGN_NAME": "tt_um_example",
+  "DESIGN_NAME": "tt_um_math_chip",
   "VERILOG_FILES": ["project.v"],
   "CLOCK_PORT": "clk",
   "CLOCK_PERIOD": 20,
