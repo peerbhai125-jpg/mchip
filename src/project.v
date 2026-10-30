@@ -18,7 +18,7 @@ module tt_um_math_chip (
     // Assign our 8-bit math result directly to the physical output pins
     assign uo_out  = result; 
 
-    always @(posedge clk or megedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             result <= 8'b0;
         end else if (ena) begin
