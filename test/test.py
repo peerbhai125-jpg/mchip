@@ -1,40 +1,38 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
-
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
-
 @cocotb.test()
 async def test_project(dut):
-    dut._log.info("Start")
+    dut._log.info("Starting Math Chip Test")
 
-    # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, unit="us")
+    # Start the clock (10us period)
+    clock = Clock(dut.clk, 10, units="us")
     cocotb.start_soon(clock.start())
 
-    # Reset
-    dut._log.info("Reset")
-    dut.ena.value = 1
+    # Apply hardware reset
+    dut._log.info("Resetting Chip...")
+    dut.rst_n.value = 0
     dut.ui_in.value = 0
     dut.uio_in.value = 0
-    dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 5)
     dut.rst_n.value = 1
-
-    dut._log.info("Test project behavior")
-
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
-
-    # Wait for one clock cycle to see the output values
     await ClockCycles(dut.clk, 1)
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    # Test Case 1: Addition (ui_in[7:6] = 00)
+    # A = 12 (0x0C), B = 5 (0x05). Top bits [7:6] = 00 -> Total ui_in = 0x0C
+    dut._log.info("Testing Addition: 12 + 5")
+    dut.ui_in.value = 0x0C   # 0000_1100 (Bits 7:6 are 00, lower bits are 12)
+    dut.uio_in.value = 5
+    await ClockCycles(dut.clk, 2)
+    assert dut.uo_out.value == 17
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # Test Case 2: Subtraction (ui_in[7:6] = 10)
+    # A = 20 (0x14), B = 7 (0x07). Top bits [7:6] = 10 -> Total ui_in = 0x94 (1001_0100)
+    dut._log.info("Testing Subtraction: 20 - 7")
+    dut.ui_in.value = 0x94   
+    dut.uio_in.value = 7
+    await ClockCycles(dut.clk, 2)
+    assert dut.uo_out.value == 13
+
+    dut._log.info("All math operations passed successfully!")
