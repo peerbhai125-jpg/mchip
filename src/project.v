@@ -9,25 +9,26 @@ module tt_um_math_chip (
     input  wire       rst_n     // Physical Reset Pad (Active Low)
 );
 
-    reg [7:0] result;
+    // Keep the internal register at 16-bits to fully absorb multiplication bits
+    reg [15:0] result_reg;
     
     // Configure bidirectional pins as inputs
     assign uio_oe  = 8'b00000000; 
     assign uio_out = 8'b00000000;
     
-    // Assign our 8-bit math result directly to the physical output pins
-    assign uo_out  = result; 
+    // Assign the lower 8 bits of our math calculation directly to the output pins
+    assign uo_out  = result_reg[7:0]; 
 
-    // Changed to purely synchronous to match the foundry standard cells perfectly
+    // Synchronous execution block aligned with the GF180 standard cell architectures
     always @(posedge clk) begin
         if (!rst_n) begin
-            result <= 8'b0;
+            result_reg <= 16'b0;
         end else if (ena) begin
             case (ui_in[7:6]) 
-                2'b00:   result <= ui_in + uio_in; // 8-bit Addition
-                2'b01:   result <= ui_in * uio_in; // 8-bit Multiplication
-                2'b10:   result <= ui_in - uio_in; // 8-bit Subtraction
-                default: result <= 8'b0;
+                2'b00:   result_reg <= {8'b0, ui_in} + {8'b0, uio_in}; // Addition
+                2'b01:   result_reg <= {8'b0, ui_in} * {8'b0, uio_in}; // Multiplication
+                2'b10:   result_reg <= {8'b0, ui_in} - {8'b0, uio_in}; // Subtraction
+                default: result_reg <= 16'b0;
             endcase
         end
     end
