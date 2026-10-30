@@ -4,7 +4,7 @@ module tt_um_math_chip (
     input  wire [7:0] uio_in,   // Bidirectional pads (inputs)
     output wire [7:0] uio_out,  
     output wire [7:0] uio_oe,   
-    input  wire       ena,      // Core physical Enable Pad (DO NOT REMOVE)
+    input  wire       ena,      // Core physical Enable Pad
     input  wire       clk,      // Physical Clock Pad
     input  wire       rst_n     // Physical Reset Pad (Active Low)
 );
@@ -21,11 +21,12 @@ module tt_um_math_chip (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             result <= 16'b0;
-        end else if (ena) begin // Only calculate when the chip layer is turned on
+        end else if (ena) begin
             case (ui_in[7:6]) 
-                2'b00:   result <= ui_in + uio_in; // Addition
-                2'b01:   result <= ui_in * uio_in; // Multiplication
-                2'b10:   result <= ui_in - uio_in; // Subtraction
+                // {8'b0, ...} explicitly pads the 8-bit registers to 16-bits safely
+                2'b00:   result <= {8'b0, ui_in} + {8'b0, uio_in}; // Safe Addition
+                2'b01:   result <= {8'b0, ui_in} * {8'b0, uio_in}; // Safe Multiplication
+                2'b10:   result <= {8'b0, ui_in} - {8'b0, uio_in}; // Safe Subtraction
                 default: result <= 16'b0;
             endcase
         end
