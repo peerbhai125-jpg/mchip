@@ -13,9 +13,9 @@ module tt_um_math_chip (
 
     reg [7:0] result;
     
-    // Connect the bidirectional control lines safely to pass-through nets
-    assign uio_oe  = 8'b00000000; // Permanently configure bidirectional pins as inputs
-    assign uio_out = uio_in;      // Safe feedback loop to satisfy global pin placer
+    // Statically isolate bidirectional control lines to prevent feedback timing loops
+    assign uio_oe  = 8'b00000000; // Force all bidirectional pads to strictly behave as inputs
+    assign uio_out = 8'b00000000; // Permanently ground output drivers to pass pin placer checks
 
     // Assign our 8-bit math result directly to the physical output pins
     assign uo_out  = result; 
