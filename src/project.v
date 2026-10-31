@@ -1,3 +1,8 @@
+`default_nettype none
+
+/* verilator lint_off WIDTHEXPAND */
+/* verilator lint_off WIDTHTRUNC */
+
 module tt_um_math_chip (
     input  wire [7:0] ui_in,    // Dedicated physical input pads
     output wire [7:0] uo_out,   // Dedicated physical output pads
@@ -9,27 +14,25 @@ module tt_um_math_chip (
     input  wire       rst_n     // Physical Reset Pad (Active Low)
 );
 
-    /* verilator lint_off UNUSEDSIGNAL */
-    reg [15:0] result_reg;
-    /* verilator lint_on UNUSEDSIGNAL */
+    reg [7:0] result;
     
     // Configure bidirectional pins as inputs
     assign uio_oe  = 8'b00000000; 
     assign uio_out = 8'b00000000;
     
-    // Assign the lower 8 bits of our math calculation directly to the output pins
-    assign uo_out  = result_reg[7:0]; 
+    // Assign our 8-bit math result directly to the physical output pins
+    assign uo_out  = result; 
 
-    // Synchronous execution block aligned with the GF180 standard cell architectures
-    always @(posedge clk) begin
+    // Standard asynchronous active-low reset layout matching the foundry library
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            result_reg <= 16'b0;
+            result <= 8'b0;
         end else if (ena) begin
             case (ui_in[7:6]) 
-                2'b00:   result_reg <= {8'b0, ui_in} + {8'b0, uio_in}; // Addition
-                2'b01:   result_reg <= {8'b0, ui_in} * {8'b0, uio_in}; // Multiplication
-                2'b10:   result_reg <= {8'b0, ui_in} - {8'b0, uio_in}; // Subtraction
-                default: result_reg <= 16'b0;
+                2'b00:   result <= ui_in + uio_in; // 8-bit Addition
+                2'b01:   result <= ui_in * uio_in; // 8-bit Multiplication
+                2'b10:   result <= ui_in - uio_in; // 8-bit Subtraction
+                default: result <= 8'b0;
             endcase
         end
     end
