@@ -1,14 +1,11 @@
 `default_nettype none
 
-/* verilator lint_off WIDTHEXPAND */
-/* verilator lint_off WIDTHTRUNC */
-
 module tt_um_math_chip (
-    input  wire [7:0] ui_in,    // Dedicated physical input pads
-    output wire [7:0] uo_out,   // Dedicated physical output pads
-    input  wire [7:0] uio_in,   // Bidirectional pads (inputs)
-    output wire [7:0] uio_out,  
-    output wire [7:0] uio_oe,   
+    input  wire [7:0] ui_in,    // Dedicated physical input pads (Input A)
+    output wire [7:0] uo_out,   // Dedicated physical output pads (Math Result)
+    input  wire [7:0] uio_in,   // Bidirectional pads (Input B)
+    output wire [7:0] uio_out,  // Bidirectional output paths
+    output wire [7:0] uio_oe,   // Bidirectional output enables
     input  wire       ena,      // Core physical Enable Pad
     input  wire       clk,      // Physical Clock Pad
     input  wire       rst_n     // Physical Reset Pad (Active Low)
@@ -16,10 +13,10 @@ module tt_um_math_chip (
 
     reg [7:0] result;
     
-    // Configure bidirectional pins as inputs
-    assign uio_oe  = 8'b00000000; 
-    assign uio_out = 8'b00000000;
-    
+    // Connect the bidirectional control lines safely to pass-through nets
+    assign uio_oe  = 8'b00000000; // Permanently configure bidirectional pins as inputs
+    assign uio_out = uio_in;      // Safe feedback loop to satisfy global pin placer
+
     // Assign our 8-bit math result directly to the physical output pins
     assign uo_out  = result; 
 
