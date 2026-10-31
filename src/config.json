@@ -1,5 +1,6 @@
 {
   "DESIGN_NAME": "tt_um_math_chip",
   "VERILOG_FILES": ["project.v"],
-  "FP_DEF_TEMPLATE": "dir::../tech/gf180mcuD/def/tt_block_1x1_pgvdd.def"
+  "FP_SIZING": "absolute",
+  "DIE_AREA": [0, 0, 346.64, 160.72]
 }
