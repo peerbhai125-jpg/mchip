@@ -9,8 +9,9 @@ module tt_um_math_chip (
     input  wire       rst_n     // Physical Reset Pad (Active Low)
 );
 
-    // Keep the internal register at 16-bits to fully absorb multiplication bits
+    /* verilator lint_off UNUSEDSIGNAL */
     reg [15:0] result_reg;
+    /* verilator lint_on UNUSEDSIGNAL */
     
     // Configure bidirectional pins as inputs
     assign uio_oe  = 8'b00000000; 
