@@ -23,9 +23,10 @@ module tt_um_math_chip (
             result <= 8'b0;
         end else if (ena) begin
             case (ui_in[7:6]) 
-                2'b00:   result <= ui_in[5:0] + uio_in; // 6-bit padded Addition
-                2'b01:   result <= ui_in[5:0] * uio_in; // 6-bit padded Multiplication
-                2'b10:   result <= ui_in[5:0] - uio_in; // 6-bit padded Subtraction
+                // {2'b0, ...} pads the 6-bit slice into a full 8-bit signal matching uio_in
+                2'b00:   result <= {2'b0, ui_in[5:0]} + uio_in; // 8-bit Addition
+                2'b01:   result <= {2'b0, ui_in[5:0]} * uio_in; // 8-bit Multiplication
+                2'b10:   result <= {2'b0, ui_in[5:0]} - uio_in; // 8-bit Subtraction
                 default: result <= 8'b0;
             endcase
         end
