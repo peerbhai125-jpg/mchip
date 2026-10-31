@@ -1,6 +1,5 @@
 {
   "DESIGN_NAME": "tt_um_math_chip",
   "VERILOG_FILES": ["project.v"],
-  "FP_CORE_UTIL": 5,
-  "PL_TARGET_DENSITY_PCT": 20
+  "PL_TARGET_DENSITY_PCT": 45
 }
