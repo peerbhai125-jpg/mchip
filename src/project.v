@@ -13,22 +13,22 @@ module tt_um_math_chip (
 
     reg [7:0] result;
     
-    // Statically isolate bidirectional control lines to prevent feedback timing loops
-    assign uio_oe  = 8'b00000000; // Force all bidirectional pads to strictly behave as inputs
-    assign uio_out = 8'b00000000; // Permanently ground output drivers to pass pin placer checks
+    // Explicit vector array assignments to pass all foundry layout checks
+    assign uio_oe  = 8'h00; 
+    assign uio_out = 8'h00; 
 
     // Assign our 8-bit math result directly to the physical output pins
     assign uo_out  = result; 
 
-    // Standard asynchronous active-low reset layout matching the foundry library
+    // Asynchronous reset logic fully matching the standard cells
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             result <= 8'b0;
         end else if (ena) begin
             case (ui_in[7:6]) 
-                2'b00:   result <= ui_in + uio_in; // 8-bit Addition
-                2'b01:   result <= ui_in * uio_in; // 8-bit Multiplication
-                2'b10:   result <= ui_in - uio_in; // 8-bit Subtraction
+                2'b00:   result <= ui_in + uio_in; // Addition
+                2'b01:   result <= ui_in * uio_in; // Multiplication
+                2'b10:   result <= ui_in - uio_in; // Subtraction
                 default: result <= 8'b0;
             endcase
         end
