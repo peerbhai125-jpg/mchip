@@ -1,5 +1,4 @@
 {
   "DESIGN_NAME": "tt_um_math_chip",
-  "VERILOG_FILES": ["project.v"],
-  "EXTRA_MCFLAGS": "-pdk gf180mcuD"
+  "VERILOG_FILES": ["project.v"]
 }
