@@ -1,13 +1,50 @@
-# Tiny Tapeout project information
+yaml_version: "4"
+
 project:
-  title:        "Simple Math ALU"      # Your project title
-  description:  "8bit calculation unit" # Short summary of your chip
-  author:       "M Peerbhai"             # Your name or alias
-  language:     "Verilog"               # The language used
-  clock_hz:     10000000                # Target clock speed
+  title:        "Simple Math ALU"      
+  description:  "8-bit hardware calculation block doing arithmetic operations." 
+  author:       "Your Name"             
+  language:     "Verilog"               
+  clock_hz:     10000000                
+  tiles:        "1x1"
+  top_module:   "tt_um_math_chip"
+  source_files:
+    - "project.v"
 
-# This links directly to your verified hardware module name
-top_module: "tt_um_math_chip"
-
-# How many tiles your project uses on the silicon wafer
-tiles: "1x1"
+pinout:
+  ui_in:
+    - "Input A bit 0"
+    - "Input A bit 1"
+    - "Input A bit 2"
+    - "Input A bit 3"
+    - "Input A bit 4"
+    - "Input A bit 5"
+    - "Operation Select bit 0"
+    - "Operation Select bit 1"
+  uo_out:
+    - "Output Result bit 0"
+    - "Output Result bit 1"
+    - "Output Result bit 2"
+    - "Output Result bit 3"
+    - "Output Result bit 4"
+    - "Output Result bit 5"
+    - "Output Result bit 6"
+    - "Output Result bit 7"
+  uio_in:
+    - "Input B bit 0"
+    - "Input B bit 1"
+    - "Input B bit 2"
+    - "Input B bit 3"
+    - "Input B bit 4"
+    - "Input B bit 5"
+    - "Input B bit 6"
+    - "Input B bit 7"
+  uio_out:
+    - "Unused"
+    - "Unused"
+    - "Unused"
+    - "Unused"
+    - "Unused"
+    - "Unused"
+    - "Unused"
+    - "Unused"
